@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bookavy | Interactive Book Store</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #f3ece4;
+  --soft: #d9b6a3;
+  --accent: #d88b79;
+  --strong: #a71f13;
+  --dark: #340a10;
+}
+/* RESET & BODY */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{background:var(--bg);color:var(--dark);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* CONTAINER */
+.container{display:flex;min-height:100vh;transition:0.3s;}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;background:var(--soft);padding:30px 20px;display:flex;flex-direction:column;justify-content:space-between;transition:0.3s;
+}
+.sidebar .profile{text-align:center;margin-bottom:40px;}
+.sidebar .profile i{font-size:50px;margin-bottom:10px;color:var(--dark);}
+.sidebar h2{font-size:18px;color:var(--dark);margin-bottom:30px;}
+.sidebar a{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--dark);font-weight:500;transition:0.3s;}
+.sidebar a:hover{color:var(--strong);}
+.sidebar .social{display:flex;gap:15px;justify-content:center;}
+.sidebar .social a{color:var(--dark);font-size:18px;transition:0.3s;}
+.sidebar .social a:hover{color:var(--strong);}
+
+/* HAMBURGER */
+.hamburger{
+  display:none; position:fixed; top:20px; left:20px; font-size:24px; background:var(--strong); color:#fff; border:none; padding:10px 12px; border-radius:5px; cursor:pointer; z-index:1001;
+}
+
+/* OVERLAY */
+.overlay{
+  display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:999;
+}
+
+/* MAIN */
+.main{flex:1;padding:40px;transition:0.3s;}
+.search-bar{width:100%;margin-bottom:30px;}
+.search-bar input{width:100%;padding:12px 20px;border:1px solid var(--soft);border-radius:25px;outline:none;font-size:16px;}
+
+/* NAV & CATEGORIES */
+.nav{display:flex;gap:20px;margin-bottom:20px;}
+.nav a{font-weight:500;transition:0.3s;}
+.nav a:hover{color:var(--strong);}
+.categories{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;}
+.categories button{padding:8px 15px;border:none;border-radius:20px;background:var(--accent);color:#fff;cursor:pointer;transition:0.3s;}
+.categories button.active{background:var(--strong);}
+.categories button:hover{opacity:0.8;}
+
+/* BOOK DETAILS */
+.book-details{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;margin-bottom:50px;}
+.book-info{flex:1;min-width:300px;}
+.book-info h1{font-size:28px;margin-bottom:10px;}
+.book-info h3{font-weight:400;margin-bottom:15px;color:var(--accent);}
+.tags{display:flex;gap:10px;margin-bottom:15px;}
+.tags span{background:var(--soft);color:var(--dark);padding:5px 12px;border-radius:15px;font-size:12px;}
+.book-info p{margin-bottom:20px;line-height:1.6;}
+.price-buttons{display:flex;gap:20px;margin-bottom:30px;}
+.price-buttons button{padding:12px 25px;border:none;border-radius:25px;font-weight:bold;cursor:pointer;transition:0.3s;}
+.price-buttons .paperback{background:var(--strong);color:#fff;}
+.price-buttons .ebook{background:var(--accent);color:#fff;}
+.price-buttons button:hover{opacity:0.9;}
+.book-cover{flex:1;min-width:250px;text-align:center;}
+.book-cover img{max-width:100%;border-radius:15px;transition:0.3s;}
+.book-cover img:hover{transform:scale(1.03);}
+
+/* ALL BOOKS */
+.all-books{margin-bottom:50px;}
+.all-books h2{margin-bottom:20px;}
+.books-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;margin-top:20px;}
+.books-grid .card{background:var(--soft);border-radius:15px;padding:10px;text-align:center;transition:0.3s;cursor:pointer;position:relative;}
+.books-grid .card img{width:100%;border-radius:10px;}
+.books-grid .card p{text-align:center;margin-top:5px;}
+.books-grid .card:hover{transform:scale(1.05);box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+
+/* RECOMMENDATION */
+.recommend{margin-top:50px;}
+.recommend h2{margin-bottom:20px;}
+.recommend-cards{display:flex;gap:20px;overflow-x:auto;padding-bottom:10px;}
+.recommend-cards::-webkit-scrollbar{height:6px;}
+.recommend-cards::-webkit-scrollbar-thumb{background:var(--strong);border-radius:3px;}
+.recommend-cards .card{min-width:150px;background:var(--soft);border-radius:15px;padding:10px;text-align:center;transition:0.3s;cursor:pointer;}
+.recommend-cards .card img{width:100%;border-radius:10px;margin-bottom:10px;}
+.recommend-cards .card:hover{transform:scale(1.05);}
+
+/* FOOTER */
+.footer{
+  background: var(--strong);
+  color: #fff;
+  padding: 40px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap:20px;
+}
+.footer .column{
+  flex:1; min-width:200px;
+}
+.footer h3{margin-bottom:15px;}
+.footer a{display:block;color:#fff;margin:5px 0;transition:0.3s;}
+.footer a:hover{color:var(--accent);}
+.footer .socials{display:flex;gap:15px;margin-top:10px;}
+.footer .socials a{color:#fff;font-size:18px;transition:0.3s;}
+.footer .socials a:hover{color:var(--accent);}
+.footer input[type="email"]{
+  padding:10px;border:none;border-radius:25px;outline:none;width:80%;margin-bottom:10px;
+}
+.footer button{
+  padding:10px 20px;border:none;border-radius:25px;background: var(--accent);color:#fff;cursor:pointer;transition:0.3s;
+}
+.footer button:hover{opacity:0.9;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .container{display:block;}
+  .hamburger{display:block;}
+  .sidebar{position:fixed;top:0;left:-250px;width:250px;height:100%;z-index:1000;transition:0.3s;}
+  .sidebar.active{left:0;}
+  .overlay.show{display:block;}
+  .book-details{flex-direction:column;}
+  .categories{justify-content:flex-start;}
+  .footer{flex-direction:column;text-align:center;}
+  .footer input[type="email"]{width:100%;}
+}
+</style>
+</head>
+<body>
+<button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+<div class="overlay" id="overlay"></div>
+
+<div class="container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    
+    <div class="profile">
+  <img src="anime-character-with-dragon-illustration.jpg" alt="Kasif" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
+    <h2>Kasif Noval</h2>
+</div>
+    
+    <div>
+      <a href="#"><i class="fas fa-user"></i> Account</a>
+      <a href="#"><i class="fas fa-bell"></i> Notifications</a>
+      <a href="#"><i class="fas fa-box"></i> My Orders</a>
+      <a href="#"><i class="fas fa-star"></i> Favorites</a>
+      <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    <div class="social">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search books...">
+    </div>
+
+    <div class="nav">
+      <a href="#">Shop</a>
+      <a href="#">Blog</a>
+      <a href="#">About Us</a>
+      <a href="#">Basket <i class="fas fa-shopping-cart"></i></a>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories" id="categories">
+      <button class="active" data-category="all">All</button>
+      <button data-category="fiction">Fiction</button>
+      <button data-category="nonfiction">Non-Fiction</button>
+      <button data-category="kids">Kids</button>
+      <button data-category="romance">Romance</button>
+    </div>
+
+    <!-- BOOK DETAILS -->
+    <div class="book-details" id="bookDetails">
+      <div class="book-info">
+        <h1 id="bookTitle">The Little Prince</h1>
+        <h3 id="bookAuthor">Antoine de Saint-Exupéry</h3>
+        <div class="tags">
+          <span>Philosophy</span>
+          <span>Farytale</span>
+          <span>0-100 y.o</span>
+        </div>
+        <p id="bookDesc">The most famous work of Antoine de Saint-Exupéry with author's drawings. A wise fairy tale is a parable that simply and soulfully speaks about friendship and love.</p>
+        <div class="price-buttons">
+          <button class="paperback" id="paperback">$10.99</button>
+          <button class="ebook" id="ebook">$4.99</button>
+        </div>
+      </div>
+      <div class="book-cover">
+        <img id="bookCover" src="https://upload.wikimedia.org/wikipedia/en/8/8e/Littleprince.JPG" alt="The Little Prince">
+      </div>
+    </div>
+
+    <!-- ALL BOOKS -->
+    <div class="all-books" id="allBooksSection">
+      <h2>All Books</h2>
+      <div class="books-grid" id="allBooks"></div>
+    </div>
+
+    <!-- YOU MAY LIKE -->
+    <div class="recommend">
+      <h2>You may like</h2>
+      <div class="recommend-cards" id="recommendCards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer">
+    <div class="column">
+      <h3>About Bookavy</h3>
+      <p>Bookavy is your premium destination for books of all genres. Discover, read, and enjoy the best selection online.</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="column">
+      <h3>Quick Links</h3>
+      <a href="#">Shop</a>
+      <a href="#">Blog</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div class="column">
+      <h3>Newsletter</h3>
+      <p>Subscribe to get the latest books and offers.</p>
+      <input type="email" placeholder="Your email">
+      <button>Subscribe</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Book Data
+const books = [
+  {title:"The Little Prince",author:"Antoine de Saint-Exupéry",desc:"The most famous work of Antoine de Saint-Exupéry with author's drawings.",paperback:"$10.99",ebook:"$4.99",cover:"https://upload.wikimedia.org/wikipedia/en/8/8e/Littleprince.JPG",category:"fiction"},
+  {title:"Communist Manifesto",author:"Karl Marx",desc:"A political pamphlet by Karl Marx and Friedrich Engels.",paperback:"$12.99",ebook:"$5.99",cover:"https://images-na.ssl-images-amazon.com/images/I/51H2dPCK1oL._SX331_BO1,204,203,200_.jpg",category:"nonfiction"},
+  {title:"Pride and Prejudice",author:"Jane Austen",desc:"A romantic novel about Elizabeth Bennet.",paperback:"$11.99",ebook:"$4.49",cover:"https://images-na.ssl-images-amazon.com/images/I/51M0bBiyvJL._SX331_BO1,204,203,200_.jpg",category:"romance"},
+  {title:"Surely You're Joking",author:"Richard Feynman",desc:"Adventures of the famous physicist, full of humorous stories.",paperback:"$13.99",ebook:"$6.99",cover:"https://images-na.ssl-images-amazon.com/images/I/51L8yXH3GuL._SX331_BO1,204,203,200_.jpg",category:"nonfiction"},
+  {title:"Poems of Sophia",author:"Sophia",desc:"A beautiful collection of heartfelt poems.",paperback:"$9.99",ebook:"$3.99",cover:"https://images-na.ssl-images-amazon.com/images/I/51z9Y6f0a9L._SX331_BO1,204,203,200_.jpg",category:"fiction"}
+];
+
+// Render All Books
+const allBooksContainer = document.getElementById('allBooks');
+const recommendContainer = document.getElementById('recommendCards');
+function renderBooks(filter="all"){
+  allBooksContainer.innerHTML="";
+  recommendContainer.innerHTML="";
+  books.forEach((book,i)=>{
+    if(filter==="all" || book.category===filter){
+      const card=document.createElement('div');
+      card.className="card";
+      card.innerHTML=`<img src="${book.cover}"><p>${book.title}</p>`;
+      card.onclick=()=>showBook(i);
+      allBooksContainer.appendChild(card);
+
+      // Recommend section
+      const recCard=document.createElement('div');
+      recCard.className="card";
+      recCard.innerHTML=`<img src="${book.cover}"><p>${book.title}</p>`;
+      recommendContainer.appendChild(recCard);
+    }
+  });
+}
+renderBooks();
+
+// Show Book Details
+function showBook(index){
+  const book=books[index];
+  document.getElementById("bookTitle").textContent=book.title;
+  document.getElementById("bookAuthor").textContent=book.author;
+  document.getElementById("bookDesc").textContent=book.desc;
+  document.getElementById("paperback").textContent=book.paperback;
+  document.getElementById("ebook").textContent=book.ebook;
+  document.getElementById("bookCover").src=book.cover;
+}
+
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.getElementById('overlay');
+hamburger.addEventListener('click', ()=>{
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('show');
+});
+overlay.addEventListener('click', ()=>{
+  sidebar.classList.remove('active');
+  overlay.classList.remove('show');
+});
+
+// Search Filter
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input',()=>{
+  const val=searchInput.value.toLowerCase();
+  allBooksContainer.innerHTML="";
+  books.forEach((book,i)=>{
+    if(book.title.toLowerCase().includes(val)){
+      const card=document.createElement('div');
+      card.className="card";
+      card.innerHTML=`<img src="${book.cover}"><p>${book.title}</p>`;
+      card.onclick=()=>showBook(i);
+      allBooksContainer.appendChild(card);
+    }
+  });
+});
+
+// Category Filter
+const categoryBtns=document.querySelectorAll('.categories button');
+categoryBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    categoryBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBooks(btn.dataset.category);
+  });
+});
+
+// Add to Cart Animation
+document.querySelectorAll('.price-buttons button').forEach(btn=>{
+  btn.addEventListener('click',()=>alert(`${btn.textContent} added to cart!`));
+});
+</script>
+</body>
+</html>
